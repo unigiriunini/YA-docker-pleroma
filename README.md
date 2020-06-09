@@ -6,6 +6,7 @@ Yet Another docker-pleroma
 
 ``` sh
 docker-compose build
+docker-compose up -d postgres
 docker-compose run --rm web mix ecto.migrate
 docker-compose run --rm web mix pleroma.user new admin admin@example.com --password password --admin
 docker-compose up -d

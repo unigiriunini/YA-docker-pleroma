@@ -14,8 +14,6 @@ RUN addgroup pleroma \
 RUN git clone -b stable https://git.pleroma.social/pleroma/pleroma /opt/pleroma \
     && chown -R pleroma:pleroma /opt/pleroma
 
-COPY --chown=pleroma:pleroma ./template.secret.exs /opt/pleroma/config/$MIX_ENV.secret.exs
-
 USER pleroma
 WORKDIR /opt/pleroma
 
@@ -23,5 +21,12 @@ RUN mix local.rebar --force \
     && mix local.hex --force \
     && mix deps.get \
     && mix compile
+
+USER root
+
+COPY --chown=pleroma:pleroma ./template.secret.exs /opt/pleroma/config/$MIX_ENV.secret.exs
+
+USER pleroma
+WORKDIR /opt/pleroma
 
 CMD ["mix", "phx.server"]

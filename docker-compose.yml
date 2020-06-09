@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        image: pleroma_nginx:latest
+        ports:
+            - "8080:80"
+        depends_on:
+            - web
+
+    web:
+        build:
+            dockerfile: Dockerfile
+            context: ./web
+            args:
+                MIX_ENV: dev
+        image: pleroma_web:latest
+        command: mix phx.server
+        expose:
+            - "4000"
+        env_file:
+            - ./web/env
+        depends_on:
+            - postgres
+        volumes:
+            - ./web/uploads:/opt/pleroma/uploads
+
+    postgres:
+        image: postgres:13-alpine
+        environment:
+            POSTGRES_PASSWORD: pleroma
+            POSTGRES_USER: pleroma
+            POSTGRES_DB: pleroma
+        volumes:
+            - ${PWD}/postgres/setup_db.sql:/docker-entrypoint-initdb.d/setup_db.sql
+            - ./postgres/data:/var/lib/postgresql/data

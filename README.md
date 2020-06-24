@@ -1,6 +1,6 @@
 # YA docker-pleroma
 
-Yet Another docker-pleroma
+Launches [Pleroma](https://pleroma.social/) for development environment on Docker
 
 ## Usage
 
